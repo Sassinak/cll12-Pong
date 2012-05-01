@@ -4,15 +4,22 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 TARGET = cll12-Pong
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        pong.cpp
+        pong.cpp \
+    serveurtcp.cpp \
+    threadjoueurs.cpp
 
-HEADERS  += pong.h
+HEADERS  += pong.h \
+    serveurtcp.h \
+    threadjoueurs.h
 
 FORMS    += pong.ui
+
+OTHER_FILES += \
+    readmeServeur.txt
