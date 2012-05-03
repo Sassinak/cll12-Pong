@@ -5,12 +5,11 @@ contient classes
     serveurtcp
     pong
 
-
 pong:
-    - un gui simple avec bouton demarrer
+  X  - un gui simple avec bouton demarrer
         fenetre observation?
     - part le tcpserveur
-    - gere la balle (x, y, angle)
+    - gere la balle (x, y)
         -debut de partie
        - gere les collisions avec le mur
        - avec les palettes

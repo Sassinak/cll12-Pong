@@ -1,5 +1,5 @@
 #include "threadjoueurs.h"
 
-ThreadJoueurs::ThreadJoueurs()
+ThreadJoueurs::ThreadJoueurs(int socketDescriptor)
 {
 }
