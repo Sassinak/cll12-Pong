@@ -26,3 +26,6 @@ threadjoueurs:
         - re-transmet la position de la balle
         - recoit/transmet la position de la palette de chaque joueur
             - avec le serveur pour collisions
+
+ref sur net: http://code.google.com/p/movement-game/source/browse/trunk/test/gametest/pong.cpp?r=52
+            + .hpp

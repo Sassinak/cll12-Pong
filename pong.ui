@@ -14,7 +14,7 @@
    <string>Pong! Arbitre</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="btnStart">
     <property name="geometry">
      <rect>
       <x>150</x>

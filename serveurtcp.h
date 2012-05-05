@@ -11,14 +11,15 @@ public:
     explicit ServeurTCP(QObject *parent = 0);
     
 signals:
-    void siPalPosfromJoueur(int);
-    void siPalPosToJoueur(int);
-    void siBallePosToJoueurs(int, int);
+    void siPalPosfromJoueur(int,int);
+    void siPalPosToJoueur(int,int);
+    void siBallePosToJoueurs(int,int);
     
 public slots:
     void incomingConnection(int);
-    void slPalPosfromJoueur(int);
-    void slPalPosToJoueur(int);
+    void slNouvelleBalle(int,int,int,int);
+    void slPalPosfromJoueur(int,int);
+    void slPalPosToJoueur(int,int);
     void slBallePosToJoueurs(int, int);
 
 public:

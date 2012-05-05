@@ -22,4 +22,6 @@ HEADERS  += pong.h \
 FORMS    += pong.ui
 
 OTHER_FILES += \
-    readmeServeur.txt
+    readmeServeur.txt \
+    ../../../../../../../../../home/anabel-lts/Desktop/QtPongdiagramA.jpg \
+    ../../../../../../../../../home/anabel-lts/Desktop/QtPongdiagramB.jpg
