@@ -1,6 +1,5 @@
 #ifndef SERVEURTCP_H
 #define SERVEURTCP_H
-
 #include <QTcpServer>
 #include <threadjoueurs.h>
 
@@ -17,13 +16,12 @@ signals:
     
 public slots:
     void incomingConnection(int);
-    void slNouvelleBalle(int,int,int,int);
     void slPalPosfromJoueur(int,int);
     void slPalPosToJoueur(int,int);
-    void slBallePosToJoueurs(int, int);
+    void slBallePosToJoueurs(int, int,int,int);
 
 public:
-    ThreadJoueurs *thJoueurs;
+    ThreadJoueurs *thJoueurs[2];
 
 };
 

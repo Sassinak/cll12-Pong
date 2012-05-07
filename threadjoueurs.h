@@ -1,5 +1,6 @@
 #ifndef THREADJOUEURS_H
 #define THREADJOUEURS_H
+
 #include <QThread>
 #include <QTcpSocket>
 
@@ -11,15 +12,20 @@ public:
     void run();
 
 signals:
-    void siPalPosfromJoueur(int);
+    void siInfosToServeur(QByteArray);
+    void siInfosFmServeur(QByteArray);
 
 public slots:
+    void slTXInfosToJoueurs(QByteArray baTXInfos);
+    void slRXInfosFmJoueurs(QByteArray);
 
 private:
     int m_socketDescriptor;
-    QByteArray baBalle;
-    QByteArray baJoueurA;
-    QByteArray baJoueurB;
+
+    QByteArray baRXInfos;     //trame de reception Infos - RX
+    QByteArray baTXInfos;     //trame de transmission
+
+    QByteArray batrame;
 };
 
 #endif // THREADJOUEURS_H

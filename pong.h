@@ -18,13 +18,14 @@ public:
     void gestionBalleetPointage(int,int,int,int);
 
 signals:
-    void siNouvelleBalle(int,int,int,int);       //balle et pointage - debut(0,0) et apres un score
-    void siBalletoServeur(int,int);
-    void siPalstoServeurs(int,int,int,int);      // chaque joueur filtre ses donnees(J2(x+400,y))
+    void siBallePos(int,int,int,int);       //balle et pointage - debut(0,0) et apres un score
+    void siPalPos(int,int);
+    //void siPalstoServeur(int,int,int,int);      // chaque joueur filtre ses donnees(J2(x+400,y))
     void siTimeout(int);                         //un probleme
 
 public slots:
    void slPalfmJoueur(int,int);                 //comment gerer 2 joueurs?
+   //void sl
     
 private slots:
     void on_btnStart_clicked();
