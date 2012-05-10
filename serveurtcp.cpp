@@ -3,12 +3,15 @@
 ServeurTCP::ServeurTCP(QObject *parent) :
     QTcpServer(parent)
 {
+    CJoueurs =0;
 }
 
 void ServeurTCP::incomingConnection(int socketDescriptor)
 {
-    //thJoueurs = new ThreadJoueurs(socketDescriptor);
-    //connect(this, SIGNAL(siBallePosToJoueurs(int,int,int,int)),thJoueurs,SLOT(slRXBallePos(int,int,int,int)));
-    //connect(this,SIGNAL(siPalPosToJoueur(int,int)),thJoueurs,SLOT(slRXPalPos(int,int)));
-    //connect(this,SIGNAL(siPalPosfromJoueur(int,int)),w,SLOT()
+    while (CJoueurs <=1)
+    {   //  2 joueurs max
+        thJoueurs = new ThreadJoueurs(socketDescriptor,CJoueurs);
+        tabJoueurs[CJoueurs]=thJoueurs;
+        CJoueurs +=1;
+    }
 }

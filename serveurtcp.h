@@ -10,19 +10,18 @@ public:
     explicit ServeurTCP(QObject *parent = 0);
     
 signals:
-    void siPalPosfromJoueur(int,int);
-    void siPalPosToJoueur(int,int);
-    void siBallePosToJoueurs(int,int);
+    void siTXInfostoArbitre(QByteArray);
+    void siTXInfostothJoueurs(QByteArray);
     
 public slots:
     void incomingConnection(int);
-    void slPalPosfromJoueur(int,int);
-    void slPalPosToJoueur(int,int);
-    void slBallePosToJoueurs(int, int,int,int);
+    void slRXInfosfmthJoueurs(QByteArray);
+    void slRXInfosrmArbitre(QByteArray);
 
 public:
-    ThreadJoueurs *thJoueurs[2];
-
+    ThreadJoueurs *thJoueurs;
+    ThreadJoueurs tabJoueurs[2];
+    int CJoueurs;
 };
 
 #endif // SERVEURTCP_H

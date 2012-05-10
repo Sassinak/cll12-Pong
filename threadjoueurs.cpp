@@ -1,9 +1,14 @@
 #include "threadjoueurs.h"
 #include <QStringList>
 
-ThreadJoueurs::ThreadJoueurs(int socketDescriptor)
+ThreadJoueurs::ThreadJoueurs(int socketDescriptor,int nJ)
 {
     m_socketDescriptor = socketDescriptor;
+    if (nJ==1)
+        *JoueurNo = "1";
+
+    if(nJ == 2)
+       *JoueurNo = "2";
 }
 
 void ThreadJoueurs::run()
@@ -18,7 +23,7 @@ void ThreadJoueurs::run()
         {
             baInit=unSocket.read(unSocket.bytesAvailable());
             if(baInit == "#")
-                unSocket.write("ok");
+                unSocket.write(JoueurNo);
             unSocket.write(baTXInfos);
         }
     }
@@ -28,17 +33,21 @@ void ThreadJoueurs::run()
 }
 void ThreadJoueurs::slRXInfosFmJoueurs(QByteArray baRXInfos)
 {
-    int balleX,balley;
+   /* int balleX,balley;
     QString stemp;
     QString sRX=baRXInfos;
     QStringList qsltemp= sRX.split('.');
     balleX= qsltemp.at(0).toInt();
+    balley=qsltemp.at(1).toInt();*/
+    emit siInfosToServeur(baRXInfos);
+
 
 }
 void ThreadJoueurs::slTXInfosToJoueurs(QByteArray baTXInfos)
 {
-
+    //construction par boutte. ici exemple
     QString trame="325.200.10.150.420.10.10.12";
+    QString trame = sInfos.posBalleX;
     batrame.append(trame);
 }
 

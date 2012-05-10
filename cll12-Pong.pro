@@ -17,7 +17,8 @@ SOURCES += main.cpp\
 
 HEADERS  += pong.h \
     serveurtcp.h \
-    threadjoueurs.h
+    threadjoueurs.h \
+    structInfos.h
 
 FORMS    += pong.ui
 

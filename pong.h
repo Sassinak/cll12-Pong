@@ -2,7 +2,9 @@
 #define PONG_H
 #include "serveurtcp.h"
 #include "threadjoueurs.h"
+#include "structInfos.h"
 #include <QMainWindow>
+
 
 namespace Ui {
 class pong;
@@ -34,6 +36,7 @@ private:
     Ui::pong *ui;
     int scoreA,scoreB;
     ServeurTCP *serveur;
+    structInfos sInfos;
 };
 
 #endif // PONG_H
