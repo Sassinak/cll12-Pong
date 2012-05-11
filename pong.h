@@ -17,26 +17,29 @@ class pong : public QMainWindow
 public:
     explicit pong(QWidget *parent = 0);
     ~pong();
-    void gestionBalleetPointage(int,int,int,int);
+    void on_btnStart_clicked();
+    //void gestionBalleetPointage(&structInfos);
+    void NouvelleBalle();
 
 signals:
-    void siBallePos(int,int,int,int);       //balle et pointage - debut(0,0) et apres un score
-    void siPalPos(int,int);
-    //void siPalstoServeur(int,int,int,int);      // chaque joueur filtre ses donnees(J2(x+400,y))
+    //void siTxInfostoClients(&structInfos);
+    void siGagnant(int);
     void siTimeout(int);                         //un probleme
 
 public slots:
-   void slPalfmJoueur(int,int);                 //comment gerer 2 joueurs?
-   //void sl
+    //void slRxInfos(&structInfos);
     
 private slots:
-    void on_btnStart_clicked();
+
 
 private:
     Ui::pong *ui;
     int scoreA,scoreB;
     ServeurTCP *serveur;
     structInfos sInfos;
+    structInfos *pInfos;
+    int murGauche;
+    int murDroite;
 };
 
 #endif // PONG_H

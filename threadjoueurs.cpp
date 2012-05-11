@@ -1,19 +1,19 @@
 #include "threadjoueurs.h"
-#include <QStringList>
+#include <QString>
 
-ThreadJoueurs::ThreadJoueurs(int socketDescriptor,int nJ)
+ThreadJoueurs::ThreadJoueurs(int socketDescriptor,int noJ,structInfos * pinfos)
 {
     m_socketDescriptor = socketDescriptor;
-    if (nJ==1)
+    if (noJ==1)
         *JoueurNo = "1";
 
-    if(nJ == 2)
+    if(noJ == 2)
        *JoueurNo = "2";
+    m_pInfo = pinfos;
 }
 
 void ThreadJoueurs::run()
 {
-    QByteArray baInit;
     QTcpSocket unSocket;
 
     unSocket.setSocketDescriptor(m_socketDescriptor);
@@ -21,9 +21,12 @@ void ThreadJoueurs::run()
     {
         while(unSocket.waitForReadyRead())
         {
-            baInit=unSocket.read(unSocket.bytesAvailable());
-            if(baInit == "#")
+            baRXInfos=unSocket.read(unSocket.bytesAvailable());
+            if(baRXInfos[0] == "#")
                 unSocket.write(JoueurNo);
+            else
+                RXInfosFmJoueurs(&baRXInfos);
+
             unSocket.write(baTXInfos);
         }
     }
@@ -31,23 +34,18 @@ void ThreadJoueurs::run()
     unSocket.close();
 
 }
-void ThreadJoueurs::slRXInfosFmJoueurs(QByteArray baRXInfos)
+void ThreadJoueurs::RXInfosFmJoueurs(QByteArray &baRXInfos)
 {
-   /* int balleX,balley;
-    QString stemp;
-    QString sRX=baRXInfos;
-    QStringList qsltemp= sRX.split('.');
-    balleX= qsltemp.at(0).toInt();
-    balley=qsltemp.at(1).toInt();*/
-    emit siInfosToServeur(baRXInfos);
-
-
+    //m_pInfo->
+    emit siInfosToServeur(&sInfos);
 }
-void ThreadJoueurs::slTXInfosToJoueurs(QByteArray baTXInfos)
+void ThreadJoueurs::slTXInfosToJoueurs(structInfos sTXInfos)
 {
-    //construction par boutte. ici exemple
-    QString trame="325.200.10.150.420.10.10.12";
-    QString trame = sInfos.posBalleX;
-    batrame.append(trame);
+
+    // ici exemple
+    structInfos sinfos={1,325,200,10,150,420,10,1012};
+
+    baTXInfos =sinfos.encode(sTXInfos);
+
 }
 

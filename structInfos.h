@@ -1,5 +1,7 @@
 #ifndef STRUCTINFOS_H
 #define STRUCTINFOS_H
+#include <QString>
+#include <QDataStream>
 
 class structInfos
 {
@@ -13,7 +15,10 @@ public:
     int scoreA;
     int scoreB;
 public:
-    void toString();
+    QByteArray* encode(structInfos *pinfos); //for tx to client
+    structInfos*decode(QByteArray &baRx);//for RX BY CLIENT
+    void extraitposJnX(QByteArray, structInfos *pinfo); // extrait palX
 };
+
 
 #endif // STRUCTINFOS_H
