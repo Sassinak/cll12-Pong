@@ -1,6 +1,5 @@
 #ifndef THREADJOUEURS_H
 #define THREADJOUEURS_H
-#include "structInfos.h"
 #include <QThread>
 #include <QTcpSocket>
 
@@ -8,23 +7,24 @@ class ThreadJoueurs : public QThread
 {
     Q_OBJECT
 public:
-    explicit ThreadJoueurs(int socketDescriptor, int noJ,structInfos *pinfos);
+    explicit ThreadJoueurs(int socketDescriptor, int noJ);
     void run();
-    void RXInfosFmJoueurs(QByteArray &baRXInfos);
+    void RXInfosFmJoueurs(QByteArray baRXInfos);
+    QByteArray TXInfosToJoueurs(int* pTXInfos);
 
 signals:
-    void siInfosToServeur(*structInfos);
-    void siInfosFmServeur(*structInfos);
+    void siInfosToServeur(int*);
+    void siInfosFmServeur(int*);
 
 public slots:
-    void slTXInfosToJoueurs(*structInfos sTXInfos);
+
 
 private:
     int m_socketDescriptor;
-    char *JoueurNo;
-    QByteArray *baRXInfos;     //trame de reception Infos - RX
-    QByteArray *baTXInfos;     //trame de transmission
-    structInfos * m_pInfo;
+    char* JoueurNo;
+    QByteArray baRXInfos;     //trame de reception Infos - RX
+    QByteArray baTXInfos;     //trame de transmission
+    int* m_pInfos;
 };
 
 #endif // THREADJOUEURS_H

@@ -10,17 +10,16 @@ public:
     explicit ServeurTCP(QObject *parent = 0);
     
 signals:
-    void siTXInfostoArbitre(structInfos);
-    void siTXInfostothJoueurs(structInfos);
+    void siTXInfostoArbitre(int*);
+    void siTXInfostothJoueurs(int*);
     
 public slots:
     void incomingConnection(int);
-    void slRXInfosfmthJoueurs(structInfos);
-    void slRXInfosfmArbitre(structInfos);
+    void slRXInfosfmthJoueurs(int*);
+    void slRXInfosfmArbitre(int*);
 
 public:
     ThreadJoueurs *thJoueurs;
-    ThreadJoueurs tabJoueurs[2];
     int CJoueurs;
 };
 

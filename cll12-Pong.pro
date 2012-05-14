@@ -13,13 +13,11 @@ TEMPLATE = app
 SOURCES += main.cpp\
         pong.cpp \
     serveurtcp.cpp \
-    threadjoueurs.cpp \
-    structInfos.cpp
+    threadjoueurs.cpp
 
 HEADERS  += pong.h \
     serveurtcp.h \
-    threadjoueurs.h \
-    structInfos.h
+    threadjoueurs.h
 
 FORMS    += pong.ui
 
