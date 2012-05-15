@@ -15,8 +15,8 @@ signals:
     
 public slots:
     void incomingConnection(int);
-    void slRXInfosfmthJoueurs(int*);
-    void slRXInfosfmArbitre(int*);
+ //   void slRXInfosfmthJoueurs(int*);
+  //  void slRXInfosfmArbitre(int*);
 
 public:
     ThreadJoueurs *thJoueurs;

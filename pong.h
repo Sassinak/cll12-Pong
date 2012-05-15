@@ -29,7 +29,7 @@ signals:
     void siTimeout(int);                         //un probleme
 
 public slots:
-    void slRxInfos(int*);
+ //   void slRxInfos(int*);
     
 private slots:
 
