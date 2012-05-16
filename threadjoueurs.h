@@ -14,7 +14,6 @@ public:
 
 signals:
     void siInfosToServeur(int*);
-    void siInfosFmServeur(int*);
 
 public slots:
 

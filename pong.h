@@ -20,25 +20,27 @@ public:
     explicit pong(QWidget *parent = 0);
     ~pong();
     void on_btnStart_clicked();
-    void gestionBalleetPointage(int*);
-    void NouvelleBalle();
+    void gestionBalleetPointage(int* pinfos);
+    void NouvelleBalle(int*);
+
+    int *pInfos;        // pointe sur tableau int* qui contient toutes les donnees
 
 signals:
-    //void siTxInfostoClients(&structInfos);
+    void siTxInfostoClients(int * p);
     void siGagnant(int);
     void siTimeout(int);                         //un probleme
 
 public slots:
- //   void slRxInfos(int*);
+    void slRxInfos(int* p);
     
 private slots:
 
 
 private:
     Ui::pong *ui;
-    int scoreA,scoreB;
+    int scoreA,scoreB, code;
     ServeurTCP *serveur;
-    int *pInfos;
+
     QGraphicsScene *Table;
     QGraphicsRectItem *J1,*J2;
     QGraphicsEllipseItem * Balle;

@@ -1,5 +1,6 @@
 #include "pong.h"
 #include "ui_pong.h"
+#include <QtGui>
 
 #define UNITE 10
 #define WIDTH 820
@@ -11,12 +12,11 @@ pong::pong(QWidget *parent) :
 {
     ui->setupUi(this);
     //int tInfos (1,2,3,4,5,6,7,8);
-    int tInfos [8]={WIDTH/2,HEIGHT/2,UNITE*3,HEIGHT/2,WIDTH-UNITE *40,HEIGHT/2,0,0};//pos depart : nouvelle balle
-    pInfos=tInfos;
+    int startInfos [9]={'%',WIDTH/2,HEIGHT/2,UNITE*3,HEIGHT/2,WIDTH-UNITE *40,HEIGHT/2,0,0};//pos depart : nouvelle balle
+    pInfos=startInfos;
 
-    //sInfos= new structInfos();
     //creation des objets
-   /* this->J1 = new QGraphicsRectItem (0,0,UNITE,UNITE *4);
+    this->J1 = new QGraphicsRectItem (0,0,UNITE,UNITE *4);
     this->J2 = new QGraphicsRectItem (0,0,UNITE,UNITE *4);
     this ->Balle = new QGraphicsEllipseItem (0,0,UNITE,UNITE);
     this->dx = -1;
@@ -25,52 +25,70 @@ pong::pong(QWidget *parent) :
     //Table->add
 
     //pos départ
-    this->J1->setPos(sInfos->posJ1X,sInfos->posJ1Y);
-    this->J2->setPos(sInfos->posJ2X,sInfos->posJ2Y);
-    this->Balle->setPos(sInfos->posBalleX,sInfos->posBalleY);
+    this->J1->setPos(pInfos[4],pInfos[5]);
+    this->J2->setPos(pInfos[6],pInfos[7]);
+    this->Balle->setPos(pInfos[2],pInfos[3]);
 
     murGauche = 1;
     murDroite = 600;    //un peu bidon, ideal window.width -10
-    */
+
 }
 
 pong::~pong()
 {
     delete ui;
 }
-void pong::gestionBalleetPointage(int* tinfos)
-//void pong::gestionBalleetPointage(structInfos sinfos)
+void pong::gestionBalleetPointage(int* pinfos)
 {
+    Balle->moveBy(dx*10*0.005,dy*10*0.005);
+
+    //collisions
+    // limite terrain
+    if(Balle->y()>HEIGHT-10 || Balle->y()<= 0)
+        dy = -dy;
+    //avec palettes joueurs
+    if(Balle->collidesWithItem(J1)|| Balle->collidesWithItem(J2))
+        dx =-dx;
 
     //if balle score( depasse xmaxA ou xmaxB)
-    int cote=0;
-   /* if(sinfos.posBalleX < murGauche)
+    if(Balle->x() < murGauche)
     {
-        cote = 2;
-        sinfos.scoreB =+1;
-        if(sinfos.scoreB == 15)
-            emit siGagnant(cote); // ?
+        pinfos[8] =+1;      //score B joueur 2
+        if(pinfos[8] == 15)
+            *pinfos[0]= int('$');
     }
-    if(sinfos.posBalleX > murDroite)
+    if(Balle->x() > murDroite)
     {
-        cote =1;
-        sinfos.scoreA =+1;
-        if(sinfos.scoreA == 15)
-            emit siGagnant(cote);
-    }*/
+        pinfos[9] =+1;      //score A joueur 1
+        if(pinfos[9] == 15)
+             *pinfos[0]= int('$');
+    }
+    *pinfos[1]= Balle->x();
+    *pinfos[2]= Balle->y();
+    *pinfos[3]= J1->x();        //prep pour tx
+    *pinfos[4]= J1->y();
+    *pinfos[5]= J2->x();
+    *pinfos[6]= J2->y();
 
-    //if collision palette
-    //rebondir balle
-    //emit pos balle
-    Balle->moveBy(dx,dy);
-// if(Balle->collidesWithItem((J1)))
-    //si(sinfos.posBalleY==sinfos.posJ1Y)
-
+    emit(siTxInfostoClients(pinfos);
 }
 
 void pong::on_btnStart_clicked()
 {
     serveur = new ServeurTCP();
-    //connect(this,SIGNAL(siNouvelleBalle(int,int,int,int)),serveur,SLOT(slNouvelleBalle(int,int,int,int)));
+    connect(this, SIGNAL(siTxInfostoClients(int*)),serveur, SLOT(slRXInfosfmArbitre(int*)));
+    connect(serveur,SIGNAL(siTXInfostoArbitre(int*)), this, SLOT(slRxInfos(int*)));
+    if(!serveur->listen(QHostAddress::Any, 60123))
+        QMessageBox::information(this,"Erreur","Erreur de connection");
+}
+void pong::slRxInfos(int * p)
+{
+    code = p[0];
+    Balle->setPos(p[1],p[2]);
+    J1->setPos(p[3],p[4]);
+    J2->setPos(p[5],p[6]);
+    scoreA = p[7];
+    scoreB = p[8];
 
+    gestionBalleetPointage(p);
 }

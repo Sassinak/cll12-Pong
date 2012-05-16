@@ -6,6 +6,7 @@ contient classes
     pong
     int tInfos [] : contient NO Joueur + toutes les coordonnees
 
+    - code de message (#(35) = norm, $ = gagnant, % = Timeout/nouvelle balle, & = start, @ = ?? (64)
     - pos balle (x,y)
     - pos joueur1 (x,y)
     - pos joueur2 (x+400, y)
@@ -15,8 +16,7 @@ contient classes
 pong:
   X  - un gui simple avec bouton demarrer
         fenetre observation?
-  X  - part le tcpserveur avec tableau de thJoueurs[2]
-    - RX infos = int[n]
+    - RX infos = int[9]
     - gere la balle (x, y)
         -debut de partie
        - gere les collisions avec le mur
@@ -25,13 +25,12 @@ pong:
     - gere les points
         - affiche les points
         - declare le gagnant
-    - TX infos:structInfos
-
+    - TX infos: int * pInfos
 serveurtcp:
  X  - attend 2 connections
  x  - part les threadsjoueurs
         - en assignant noJoueur
-    - tx/rx baInfos > arbitre(gui) ou /thjoueurs >> clients
+    - tx/rx int * pInfos > arbitre(gui) ou /thjoueurs >> clients
 
 threadjoueurs:
     - communique entre le serveur et les clients/joueurs par tcp/ip
