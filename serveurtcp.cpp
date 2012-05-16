@@ -3,22 +3,28 @@
 
 ServeurTCP::ServeurTCP(QObject *parent)
 {
-    CJoueurs =0;
+    CJoueurs ='0';
 }
 
 void ServeurTCP::incomingConnection(int socketDescriptor)
 {
-    while (CJoueurs <=1)
-    {   //  2 joueurs max
-        thJoueurs = new ThreadJoueurs(socketDescriptor,CJoueurs);
-        connect(thJoueurs,SIGNAL(siInfosFmServeur(int*)),this,SLOT(slRXInfosfmArbitre(int*)));
-        connect(thJoueurs,SIGNAL(siInfosToServeur(int*)),this,SLOT(slRXInfosfmthJoueurs(int*)));
-
-        //tabJoueurs[CJoueurs]=thJoueurs;
+    while (CJoueurs <='1')
+    {
+        //  2 joueurs max
         CJoueurs +=1;
+        thJoueurs = new ThreadJoueurs(socketDescriptor,CJoueurs);
+        connect(thJoueurs,SIGNAL(siInfosToServeur(int*)),this,SLOT(slRXInfosfmArbitre(int*)));
+        connect(this,SIGNAL(siTXInfostothJoueurs(int*)),thJoueurs,SLOT(slInfosFmServeur(int*)));
+
         thJoueurs->start();
     }
 }
-void slRXInfosfmthJoueurs(int*){}
-void slRXInfosfmArbitre(int*){}
+void ServeurTCP::slRXInfosfmthJoueurs(int* p)
+{
+    emit(siTXInfostoArbitre(p));
+}
+void ServeurTCP::slRXInfosfmArbitre(int*p)
+{
+    emit(siTXInfostothJoueurs(p));
+}
 

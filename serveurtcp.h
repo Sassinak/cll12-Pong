@@ -20,7 +20,7 @@ public slots:
 
 public:
     ThreadJoueurs *thJoueurs;
-    int CJoueurs;
+    char CJoueurs;
 };
 
 #endif // SERVEURTCP_H

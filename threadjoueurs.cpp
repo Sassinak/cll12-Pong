@@ -2,15 +2,11 @@
 #include <QString>
 #include <QStringList>
 
-ThreadJoueurs::ThreadJoueurs(int socketDescriptor,int noJ)
+ThreadJoueurs::ThreadJoueurs(int socketDescriptor,char noJ)
 {
     m_socketDescriptor = socketDescriptor;
-    if (noJ==1)
-       *JoueurNo = '1';
 
-    if(noJ == 2)
-       *JoueurNo = '2';
-    //*******m_pInfo = pinfos;
+    cNoJ = noJ;
 }
 
 void ThreadJoueurs::run()
@@ -20,12 +16,12 @@ void ThreadJoueurs::run()
     unSocket.setSocketDescriptor(m_socketDescriptor);
     if(unSocket.waitForConnected(1000))
     {
-        while(unSocket.waitForReadyRead())
+        while(unSocket.waitForReadyRead(1000))
         {
-            baRXInfos = unSocket.readAll();
-            //baRXInfos=unSocket.read(unSocket.bytesAvailable());****
-            if(baRXInfos[0] == '#')
-                unSocket.write(JoueurNo);
+            //baRXInfos = unSocket.readAll();
+            baRXInfos=unSocket.read(unSocket.bytesAvailable());
+            if(baRXInfos[0] == '&')
+                unSocket.write(&cNoJ);
             else
             {
                 baRXInfos = TXInfosToJoueurs(m_pInfos);
@@ -44,27 +40,33 @@ void ThreadJoueurs::RXInfosFmJoueurs(QByteArray baRXInfos)
     //decode rx byte array
     QString stemp(baRXInfos);
     QStringList sltemp = stemp.split('.');
-
-    for (int i=0;i<sltemp.size();i++)
-        m_pInfos[i]=sltemp.at(i).toInt();
+    int ttemp[9];
+    for (int i=0;i<sltemp.size()-1;i++)
+        ttemp[i]=sltemp.at(i).toInt();
+    m_pInfos =ttemp;
 
     emit siInfosToServeur(m_pInfos);
 }
 QByteArray ThreadJoueurs::TXInfosToJoueurs(int* pTXInfos)
 {
     //encode pour tx
-    QByteArray baTXinfos;
-    // ici exemple
-    int n = 8;
-    int tempinfos[8]={1,325,200,10,150,420,10,1012};
+    QByteArray batxinfos;
 
-    baTXinfos.append(tempinfos[0]);
-    for (int i=1;i<n;i++)
+    //// ici exemple
+
+    int TXInfos[9]={35,325,200,10,150,420,10,10};
+    pTXInfos = TXInfos;////
+    //transfer pour TX
+    batxinfos.append((QString)pTXInfos[0]);
+    for (int i=1;i<9;i++)
     {
-        baTXinfos.append('.');
-        baTXinfos.append(tempinfos[i]);
-        //baTXInfos.append(pTXInfos[i]);
+        batxinfos.append('.');
+        batxinfos.append(QString::number(pTXInfos[i]));
     }
-    return baTXinfos;
+    return batxinfos;
+}
+void ThreadJoueurs::slInfosFmServeur(int * p)
+{
+    baTXInfos = TXInfosToJoueurs(p);
 }
 

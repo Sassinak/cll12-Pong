@@ -19,7 +19,7 @@ class pong : public QMainWindow
 public:
     explicit pong(QWidget *parent = 0);
     ~pong();
-    void on_btnStart_clicked();
+
     void gestionBalleetPointage(int* pinfos);
     void NouvelleBalle(int*);
 
@@ -36,8 +36,11 @@ public slots:
 private slots:
 
 
+    void on_btnStart_clicked();
+
 private:
     Ui::pong *ui;
+    bool bstart;
     int scoreA,scoreB, code;
     ServeurTCP *serveur;
 

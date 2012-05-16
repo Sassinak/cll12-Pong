@@ -14,6 +14,7 @@ pong::pong(QWidget *parent) :
     //int tInfos (1,2,3,4,5,6,7,8);
     int startInfos [9]={'%',WIDTH/2,HEIGHT/2,UNITE*3,HEIGHT/2,WIDTH-UNITE *40,HEIGHT/2,0,0};//pos depart : nouvelle balle
     pInfos=startInfos;
+    bstart = false;
 
     //creation des objets
     this->J1 = new QGraphicsRectItem (0,0,UNITE,UNITE *4);
@@ -21,7 +22,7 @@ pong::pong(QWidget *parent) :
     this ->Balle = new QGraphicsEllipseItem (0,0,UNITE,UNITE);
     this->dx = -1;
     this->dy = -1;
-    this->Table->setSceneRect(0,0,300,600);
+    //this->Table->setSceneRect(0,0,300,600);
     //Table->add
 
     //pos départ
@@ -55,32 +56,24 @@ void pong::gestionBalleetPointage(int* pinfos)
     {
         pinfos[8] =+1;      //score B joueur 2
         if(pinfos[8] == 15)
-            *pinfos[0]= int('$');
+            pinfos[0]= int('$');
     }
     if(Balle->x() > murDroite)
     {
         pinfos[9] =+1;      //score A joueur 1
         if(pinfos[9] == 15)
-             *pinfos[0]= int('$');
+             pinfos[0]= int('$');
     }
-    *pinfos[1]= Balle->x();
-    *pinfos[2]= Balle->y();
-    *pinfos[3]= J1->x();        //prep pour tx
-    *pinfos[4]= J1->y();
-    *pinfos[5]= J2->x();
-    *pinfos[6]= J2->y();
+    pinfos[1]= Balle->x();
+    pinfos[2]= Balle->y();
+    pinfos[3]= J1->x();        //prep pour tx
+    pinfos[4]= J1->y();
+    pinfos[5]= J2->x();
+    pinfos[6]= J2->y();
 
-    emit(siTxInfostoClients(pinfos);
+    emit(siTxInfostoClients(pinfos));
 }
 
-void pong::on_btnStart_clicked()
-{
-    serveur = new ServeurTCP();
-    connect(this, SIGNAL(siTxInfostoClients(int*)),serveur, SLOT(slRXInfosfmArbitre(int*)));
-    connect(serveur,SIGNAL(siTXInfostoArbitre(int*)), this, SLOT(slRxInfos(int*)));
-    if(!serveur->listen(QHostAddress::Any, 60123))
-        QMessageBox::information(this,"Erreur","Erreur de connection");
-}
 void pong::slRxInfos(int * p)
 {
     code = p[0];
@@ -91,4 +84,21 @@ void pong::slRxInfos(int * p)
     scoreB = p[8];
 
     gestionBalleetPointage(p);
+}
+
+void pong::on_btnStart_clicked()
+{
+    if(!bstart){
+            serveur = new ServeurTCP();
+            connect(this, SIGNAL(siTxInfostoClients(int*)),serveur, SLOT(slRXInfosfmArbitre(int*)));
+            connect(serveur,SIGNAL(siTXInfostoArbitre(int*)), this, SLOT(slRxInfos(int*)));
+            if(!serveur->listen(QHostAddress::Any, 60123))
+                QMessageBox::information(this,"Erreur","Erreur de connection");
+            ui->btnStart->setText("Arret");
+        }
+     if(bstart){
+            serveur->close();
+            ui->btnStart->setText("Demarrer");
+        }
+        bstart= !bstart;
 }
