@@ -11,16 +11,17 @@ public:
     void run();
     int* m_pInfos;  // pointeur d'infos
     void RXInfosFmJoueurs(QByteArray baRXInfos);
-    QByteArray TXInfosToJoueurs(int* pTXInfos);
+    QByteArray TXInfosToJoueurs(int *pTXInfos,int n);
 
 signals:
-    void siInfosToServeur(int*);
+    void siInfosToServeur(int*,int);
 
 public slots:
-    void slInfosFmServeur(int*);
+    void slInfosFmServeur(int*,int n);
 
 private:
     int m_socketDescriptor;
+    int* m_tinfos;
     char cNoJ;
     QByteArray baRXInfos;     //trame de reception Infos - RX
     QByteArray baTXInfos;     //trame de transmission

@@ -6,7 +6,7 @@ contient classes
     pong
     int tInfos [] : contient NO Joueur + toutes les coordonnees
 
-    - code de message (#(35) = norm, $ = gagnant, % = Timeout/nouvelle balle, & = start, @ = ?? (64)
+    - code de message (#(35) = norm, $ = gagnant, % = Timeout/nouvelle balle, & = Nouvelle Partie, @ = ?? (64)
     - pos balle (x,y)
     - pos joueur1 (x,y)
     - pos joueur2 (x+400, y)
