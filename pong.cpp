@@ -11,9 +11,9 @@ pong::pong(QWidget *parent) :
     ui(new Ui::pong)
 {
     ui->setupUi(this);
-    //int tInfos (1,2,3,4,5,6,7,8);
+    //int tInfos {1,2,3,4,5,6,7,8};
     int startInfos [9]={'%',WIDTH/2,HEIGHT/2,UNITE*3,HEIGHT/2,WIDTH-UNITE *40,HEIGHT/2,0,0};//pos depart : nouvelle balle
-    pInfos=startInfos;
+    memcpy(m_tInfos,startInfos,9);
     bstart = false;
 
     //creation des objets
@@ -26,64 +26,17 @@ pong::pong(QWidget *parent) :
     //Table->add
 
     //pos départ
-    this->J1->setPos(pInfos[4],pInfos[5]);
-    this->J2->setPos(pInfos[6],pInfos[7]);
-    this->Balle->setPos(pInfos[2],pInfos[3]);
+    this->Balle->setPos(startInfos[2],startInfos[3]);
+    this->J1->setPos(startInfos[4],startInfos[5]);
+    this->J2->setPos(startInfos[6],startInfos[7]);
 
     murGauche = 1;
     murDroite = 600;    //un peu bidon, ideal window.width -10
-
 }
 
 pong::~pong()
 {
     delete ui;
-}
-void pong::gestionBalleetPointage(int* pinfos)
-{
-    Balle->moveBy(dx*10*0.005,dy*10*0.005);
-
-    //collisions
-    // limite terrain
-    if(Balle->y()>HEIGHT-10 || Balle->y()<= 0)
-        dy = -dy;
-    //avec palettes joueurs
-    if(Balle->collidesWithItem(J1)|| Balle->collidesWithItem(J2))
-        dx =-dx;
-
-    //if balle score( depasse xmaxA ou xmaxB)
-    if(Balle->x() < murGauche)
-    {
-        pinfos[8] =+1;      //score B joueur 2
-        if(pinfos[8] == 15)
-            pinfos[0]= int('$');
-    }
-    if(Balle->x() > murDroite)
-    {
-        pinfos[9] =+1;      //score A joueur 1
-        if(pinfos[9] == 15)
-             pinfos[0]= int('$');
-    }
-    pinfos[1]= Balle->x();
-    pinfos[2]= Balle->y();
-    pinfos[3]= J1->x();        //prep pour tx
-    pinfos[4]= J1->y();
-    pinfos[5]= J2->x();
-    pinfos[6]= J2->y();
-
-    emit(siTxInfostoClients(pinfos,9));
-}
-
-void pong::slRxInfos(int * p)
-{
-    code = p[0];
-    Balle->setPos(p[1],p[2]);
-    J1->setPos(p[3],p[4]);
-    J2->setPos(p[5],p[6]);
-    scoreA = p[7];
-    scoreB = p[8];
-
-    gestionBalleetPointage(p);
 }
 
 void pong::on_btnStart_clicked()
@@ -102,3 +55,63 @@ void pong::on_btnStart_clicked()
         }
         bstart= !bstart;
 }
+
+void pong::slRxInfos(int * p)
+{
+    // recoit la pos de la palette de chaque joueur
+    if(p[0]<100)    //si x a gauche: joueur 1
+    {
+        J1->setPos(p[0],p[1]);   //mise à jour pos joueur
+        m_tInfos[4]=p[1];        // et tableau d'infos.
+    }
+    else
+    {
+        J2->setPos(p[0],p[1]);
+        m_tInfos[6]=p[1];
+    }
+    gestionBalleetPointage(m_tInfos);
+}
+
+void pong::gestionBalleetPointage(int* pinfos)
+{
+    int tempinfos[9];
+    memcpy(tempinfos,pinfos,9);
+
+    Balle->moveBy(dx*10*0.005,dy*10*0.005);
+
+    //collisions
+    // limites terrain
+    if(Balle->y()>HEIGHT-10 || Balle->y()<= 0)
+        dy = -dy;
+    //avec palettes joueurs
+    if(Balle->collidesWithItem(J1)|| Balle->collidesWithItem(J2))
+        dx =-dx;
+
+    //if balle score( depasse xmaxA ou xmaxB)
+    if(Balle->x() < murGauche)
+    {
+        tempinfos[8] =+1;      //score B joueur 2
+        if(tempinfos[8] == 15)
+            tempinfos[0]= int('$'); //code Winner!
+    }
+    if(Balle->x() > murDroite)
+    {
+        tempinfos[9] =+1;      //score A joueur 1
+        if(tempinfos[9] == 15)
+             tempinfos[0]= int('$');
+    }
+
+    //prep pour tx
+    tempinfos[1]= Balle->x();
+    tempinfos[2]= Balle->y();
+    tempinfos[3]= J1->x();
+    tempinfos[4]= J1->y();
+    tempinfos[5]= J2->x();
+    tempinfos[6]= J2->y();
+
+    memcpy(m_tInfos,tempinfos,9);
+
+    emit(siTxInfostoClients(m_tInfos,9));
+}
+
+

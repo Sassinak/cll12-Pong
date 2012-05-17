@@ -9,7 +9,8 @@ class ThreadJoueurs : public QThread
 public:
     explicit ThreadJoueurs(int socketDescriptor, char noJ);
     void run();
-    int* m_pInfos;  // pointeur d'infos
+    int m_txInfos[9];  //tableau sortant
+    int m_rxInfos[3];  //tableau entrant
     void RXInfosFmJoueurs(QByteArray baRXInfos);
     QByteArray TXInfosToJoueurs(int *pTXInfos,int n);
 
@@ -21,7 +22,6 @@ public slots:
 
 private:
     int m_socketDescriptor;
-    int* m_tinfos;
     char cNoJ;
     QByteArray baRXInfos;     //trame de reception Infos - RX
     QByteArray baTXInfos;     //trame de transmission

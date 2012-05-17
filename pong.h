@@ -23,7 +23,7 @@ public:
     void gestionBalleetPointage(int* pinfos);
     void NouvelleBalle(int*);
 
-    int *pInfos;        // pointe sur tableau int* qui contient toutes les donnees
+    int m_tInfos[9];       // pointe sur tableau int* qui contient toutes les donnees
 
 signals:
     void siTxInfostoClients(int * p,int);
@@ -34,8 +34,6 @@ public slots:
     void slRxInfos(int* p);
     
 private slots:
-
-
     void on_btnStart_clicked();
 
 private:
@@ -43,7 +41,6 @@ private:
     bool bstart;
     int scoreA,scoreB, code;
     ServeurTCP *serveur;
-
     QGraphicsScene *Table;
     QGraphicsRectItem *J1,*J2;
     QGraphicsEllipseItem * Balle;
