@@ -26,7 +26,7 @@ public:
     int *pInfos;        // pointe sur tableau int* qui contient toutes les donnees
 
 signals:
-    void siTxInfostoClients(int * p);
+    void siTxInfostoClients(int * p,int);
     void siGagnant(int);
     void siTimeout(int);                         //un probleme
 

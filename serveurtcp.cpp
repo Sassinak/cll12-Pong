@@ -13,18 +13,18 @@ void ServeurTCP::incomingConnection(int socketDescriptor)
         //  2 joueurs max
         CJoueurs +=1;
         thJoueurs = new ThreadJoueurs(socketDescriptor,CJoueurs);
-        connect(thJoueurs,SIGNAL(siInfosToServeur(int*)),this,SLOT(slRXInfosfmArbitre(int*)));
-        connect(this,SIGNAL(siTXInfostothJoueurs(int*)),thJoueurs,SLOT(slInfosFmServeur(int*)));
+        connect(thJoueurs,SIGNAL(siInfosToServeur(int*,int)),this,SLOT(slRXInfosfmArbitre(int*,int)));
+        connect(this,SIGNAL(siTXInfostothJoueurs(int*,int)),thJoueurs,SLOT(slInfosFmServeur(int*,int)));
 
         thJoueurs->start();
     }
 }
-void ServeurTCP::slRXInfosfmthJoueurs(int* p)
+void ServeurTCP::slRXInfosfmthJoueurs(int* p,int n)
 {
-    emit(siTXInfostoArbitre(p));
+    emit(siTXInfostoArbitre(p,n));
 }
-void ServeurTCP::slRXInfosfmArbitre(int*p)
+void ServeurTCP::slRXInfosfmArbitre(int*p, int n)
 {
-    emit(siTXInfostothJoueurs(p));
+    emit(siTXInfostothJoueurs(p,n));
 }
 

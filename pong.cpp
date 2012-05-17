@@ -71,7 +71,7 @@ void pong::gestionBalleetPointage(int* pinfos)
     pinfos[5]= J2->x();
     pinfos[6]= J2->y();
 
-    emit(siTxInfostoClients(pinfos));
+    emit(siTxInfostoClients(pinfos,9));
 }
 
 void pong::slRxInfos(int * p)
