@@ -27,7 +27,6 @@ void ThreadJoueurs::run()
                 baRXInfos = TXInfosToJoueurs(m_pInfos);
                 RXInfosFmJoueurs(baRXInfos);
             }
-
             unSocket.write(baTXInfos);
         }
     }
