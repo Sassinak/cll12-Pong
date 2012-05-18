@@ -5,27 +5,25 @@ contient classes
     serveurtcp
     pong
     int tInfos [] : contient NO Joueur + toutes les coordonnees
-
-    - code de message (#(35) = norm, $ = gagnant, % = Timeout/nouvelle balle, & = Nouvelle Partie, @ = ?? (64)
-    - pos balle (x,y)
-    - pos joueur1 (x,y)
-    - pos joueur2 (x+400, y)
-    - scoreA
-    - scoreB
+        - code de message (#(35) = norm, $ = gagnant, % = Timeout/nouvelle balle, & = Nouvelle Partie, @ = ?? (64)
+        - pos balle (x,y)
+        - pos joueur1 (x,y)
+        - pos joueur2 (x+400, y)
+        - scoreA
+         scoreB
 
 pong:
   X  - un gui simple avec bouton demarrer
         fenetre observation?
-    - RX infos = int[9]
-    - gere la balle (x, y)
+  X  - RX infos = int[3]    {'#', int Jx, int Jy}
+  X  - gere la balle (x, y)
         -debut de partie
        - gere les collisions avec le mur
        - avec les palettes
-       - depasse murs du fond
-    - gere les points
-        - affiche les points
-        - declare le gagnant
-    - TX infos: int * pInfos
+       - depasse murs du fond/score
+            - gere les points
+            - declare le gagnant
+    - TX infos: int pInfos[9]
 serveurtcp:
  X  - attend 2 connections
  x  - part les threadsjoueurs
