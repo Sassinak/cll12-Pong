@@ -10,15 +10,14 @@ public:
     explicit ThreadJoueurs(int socketDescriptor, char noJ);
     void run();
     int m_txInfos[9];  //tableau sortant
-    int m_rxInfos[3];  //tableau entrant
     void RXInfosFmJoueurs(QByteArray baRXInfos);
     QByteArray TXInfosToJoueurs(int *pTXInfos,int n);
 
 signals:
-    void siInfosToServeur(int*,int);
+    void siInfosToServeur(QByteArray);
 
 public slots:
-    void slInfosFmServeur(int*,int n);
+    void slInfosFmServeur(QByteArray);
 
 private:
     int m_socketDescriptor;

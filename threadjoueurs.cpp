@@ -26,7 +26,7 @@ void ThreadJoueurs::run()
             if(baRXInfos.left(1) == "&")
             {
                 unSocket.write(baTXInfos.append(cNoJ));
-                baTXInfos = TXInfosToJoueurs(NouvellePartie,9);
+                baTXInfos = TXInfosToJoueurs(NouvellePartie,sizeof(NouvellePartie));
             }
             else
             {
@@ -43,36 +43,26 @@ void ThreadJoueurs::run()
 }
 void ThreadJoueurs::RXInfosFmJoueurs(QByteArray baRXInfos)
 {
-    //decode rx byte array
-    QString stemp(baRXInfos);
-    QStringList sltemp = stemp.split('.');
-    int ttemp[3];
-
-    for (int i=0;i<sltemp.size()-1;i++)
-        ttemp[i]=sltemp.at(i).toInt();
-
-    memcpy(m_rxInfos,ttemp,3);
-
-    emit siInfosToServeur(m_rxInfos,3);
+    emit siInfosToServeur(baRXInfos);
 }
-QByteArray ThreadJoueurs::TXInfosToJoueurs(int *pTXInfos,int n)
+QByteArray ThreadJoueurs::TXInfosToJoueurs(int *pInfos,int n)
 {
     //encode pour tx
     QByteArray batxinfos;
     QString stemp="";
-    stemp.append((QString::number(pTXInfos[0])));
+    stemp.append((QString::number(pInfos[0])));
     for (int i=1;i<n;i++)
     {
         stemp.append('.');
-        stemp.append((QString::number(pTXInfos[i])));
+        stemp.append((QString::number(pInfos[i])));
     }
     batxinfos.clear();
     batxinfos.append(stemp);
     return batxinfos;
 }
-void ThreadJoueurs::slInfosFmServeur(int * p, int n)
+
+void ThreadJoueurs::slInfosFmServeur(QByteArray p)
 {
-    memcpy(m_txInfos,p,n);
-    baTXInfos = TXInfosToJoueurs(p,n);
+    baTXInfos = p;
 }
 

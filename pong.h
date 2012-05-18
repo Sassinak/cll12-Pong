@@ -24,18 +24,19 @@ public:
     void NouvelleBalle(int*);
 
     int m_tInfos[9];       // pointe sur tableau int* qui contient toutes les donnees
+    QByteArray baTX;
 
 signals:
-    void siTxInfostoClients(int * p,int);
-    void siGagnant(int);
+    void siTxInfostoClients(QByteArray,int);
     void siTimeout(int);                         //un probleme
 
 public slots:
-    void slRxInfos(int* p);
+    //void slRxInfos(int* p);
+    void slRxInfos(QByteArray baRXInfos);
     
 private slots:
     void on_btnStart_clicked();
-
+    QByteArray TXInfosToJoueurs(int *pInfos,int n);
 private:
     Ui::pong *ui;
     bool bstart;

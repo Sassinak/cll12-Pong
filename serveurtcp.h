@@ -7,16 +7,16 @@ class ServeurTCP : public QTcpServer
 {
     Q_OBJECT
 public:
-    explicit ServeurTCP(QObject *parent = 0);
+    explicit ServeurTCP();//QObject *parent = 0);
     
 signals:
-    void siTXInfostoArbitre(int*,int);
-    void siTXInfostothJoueurs(int*,int);
+    void siTXInfostoArbitre(QByteArray);
+    void siTXInfostothJoueurs(QByteArray);
     
 public slots:
     void incomingConnection(int);
-    void slRXInfosfmthJoueurs(int*,int n);
-    void slRXInfosfmArbitre(int*,int n);
+    void slRXInfosfmthJoueurs(QByteArray barx);
+    void slRXInfosfmArbitre(QByteArray batx);
 
 public:
     ThreadJoueurs *thJoueurs;

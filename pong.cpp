@@ -43,8 +43,8 @@ void pong::on_btnStart_clicked()
 {
     if(!bstart){
             serveur = new ServeurTCP();
-            connect(this, SIGNAL(siTxInfostoClients(int*)),serveur, SLOT(slRXInfosfmArbitre(int*)));
-            connect(serveur,SIGNAL(siTXInfostoArbitre(int*)), this, SLOT(slRxInfos(int*)));
+            connect(this, SIGNAL(siTxInfostoClients(QByteArray)),serveur, SLOT(slRXInfosfmArbitre(QByteArray)));
+            connect(serveur,SIGNAL(siTXInfostoArbitre(QByteArray)), this, SLOT(slRxInfos(QByteArray)));
             if(!serveur->listen(QHostAddress::Any, 60123))
                 QMessageBox::information(this,"Erreur","Erreur de connection");
             ui->btnStart->setText("Arret");
@@ -55,20 +55,29 @@ void pong::on_btnStart_clicked()
         }
         bstart= !bstart;
 }
-
-void pong::slRxInfos(int * p)
+ // Trame recue des clients
+void pong::slRxInfos(QByteArray baRXInfos)
 {
+    //decode rx byte array [3]
+    QString stemp(baRXInfos);
+    QStringList sltemp = stemp.split('.');
+    int ttemp[sltemp.size()];
+
+    for (int i=0;i<sltemp.size()-1;i++)
+        ttemp[i]=sltemp.at(i).toInt();
+
     // recoit la pos de la palette de chaque joueur
-    if(p[0]<100)    //si x a gauche: joueur 1
+    if(ttemp[1]<100)    //si x a gauche: joueur 1
     {
-        J1->setPos(p[0],p[1]);   //mise à jour pos joueur
-        m_tInfos[4]=p[1];        // et tableau d'infos.
+        J1->setPos(ttemp[1],ttemp[2]);   //mise à jour pos joueur
+        m_tInfos[4]=ttemp[2];        // et tableau d'infos.
     }
     else
     {
-        J2->setPos(p[0],p[1]);
-        m_tInfos[6]=p[1];
+        J2->setPos(ttemp[1],ttemp[2]);
+        m_tInfos[6]=ttemp[2];
     }
+    //Au Jeu!
     gestionBalleetPointage(m_tInfos);
 }
 
@@ -109,9 +118,27 @@ void pong::gestionBalleetPointage(int* pinfos)
     tempinfos[5]= J2->x();
     tempinfos[6]= J2->y();
 
-    memcpy(m_tInfos,tempinfos,9);
+    memcpy(m_tInfos,tempinfos,sizeof(tempinfos));
 
-    emit(siTxInfostoClients(m_tInfos,9));
+    //conversion immediate en qbytearray pour tx
+    baTX = TXInfosToJoueurs(m_tInfos,sizeof(m_tInfos));
+
+    emit(siTxInfostoClients(baTX,9));
+}
+QByteArray pong::TXInfosToJoueurs(int *pInfos,int n)
+{
+    //encode pour tx
+    QByteArray batxinfos;
+    QString stemp="";
+    stemp.append((QString::number(pInfos[0])));
+    for (int i=1;i<n;i++)
+    {
+        stemp.append('.');
+        stemp.append((QString::number(pInfos[i])));
+    }
+    batxinfos.clear();
+    batxinfos.append(stemp);
+    return batxinfos;
 }
 
 
