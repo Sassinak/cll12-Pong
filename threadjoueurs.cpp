@@ -5,17 +5,16 @@
 ThreadJoueurs::ThreadJoueurs(int socketDescriptor,char noJ)
 {
     m_socketDescriptor = socketDescriptor;
-    int NouvellePartie[9] = {'&', 50, 150, 40,100,760,100,0,0};
 
-    cNoJ = noJ;
-
-    memcpy(m_txInfos,NouvellePartie,9);
+    cNoJ = noJ;                             //recuperation nojoueur
+    int NouvellePartie[9] = {'&',50,HEIGHT/2,UNITE*4,(HEIGHT/2)-20,WIDTH-UNITE *4,(HEIGHT/2)-20,0,0};//pos depart : nouvelle balle
+    memcpy(m_tNouvellePartie,NouvellePartie,sizeof(NouvellePartie));     //et initialisation des joueurs
 }
 
 void ThreadJoueurs::run()
 {
     QTcpSocket unSocket;
-    int NouvellePartie[9] = {'&', 50, 150, 40,100,760,100,0,0};
+
 
     unSocket.setSocketDescriptor(m_socketDescriptor);
     if(unSocket.waitForConnected(1000))
@@ -23,16 +22,16 @@ void ThreadJoueurs::run()
         while(unSocket.ConnectedState)         //.waitForReadyRead(1000))
         {
             baRXInfos=unSocket.read(unSocket.bytesAvailable());
-            if(baRXInfos.left(1) == "&")
+            if(baRXInfos.left(1) == "&")    //code de connection des joueurs
             {
-                unSocket.write(baTXInfos.append(cNoJ));
-                baTXInfos = TXInfosToJoueurs(NouvellePartie,9);
+                unSocket.write(baTXInfos.append(cNoJ));     //assignation du numero
+                baTXInfos = TXInfosToJoueurs(m_tNouvellePartie,9);  // trame de debut de partie (= NouvellePartie)
             }
             else
             {
-                RXInfosFmJoueurs(baRXInfos);
-                baTXInfos = TXInfosToJoueurs(m_txInfos,9);
-            }
+                RXInfosFmJoueurs(baRXInfos);                //recoit {'#', JnX, JnY}
+                baTXInfos = TXInfosToJoueurs(m_txInfos,9);  //repond trame {code, balle X, balle Y, J1X, J1Y, J2X, J2Y, ScoreA, ScoreB}
+            }                                               // code = '#' (normale), '$' (gagnant), '%' (Nouvelle Balle)
             unSocket.write(baTXInfos);
             unSocket.waitForBytesWritten(10);
         }
@@ -51,7 +50,7 @@ void ThreadJoueurs::RXInfosFmJoueurs(QByteArray baRXInfos)
     for (int i=0;i<sltemp.size()-1;i++)
         ttemp[i]=sltemp.at(i).toInt();
 
-    memcpy(m_rxInfos,ttemp,3);
+    memcpy(m_rxInfos,ttemp,sizeof(ttemp));
 
     emit siInfosToServeur(m_rxInfos,3);
 }
@@ -72,7 +71,7 @@ QByteArray ThreadJoueurs::TXInfosToJoueurs(int *pTXInfos,int n)
 }
 void ThreadJoueurs::slInfosFmServeur(int * p, int n)
 {
-    memcpy(m_txInfos,p,n);
+    memcpy(m_txInfos,p,sizeof(p));
     baTXInfos = TXInfosToJoueurs(p,n);
 }
 

@@ -6,7 +6,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QTimeLine>
-
+#define UNITE 10
+#define WIDTH 820
+#define HEIGHT 300
 
 namespace Ui {
 class pong;

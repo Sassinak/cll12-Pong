@@ -9,8 +9,8 @@ ServeurTCP::ServeurTCP(QObject *parent)
 void ServeurTCP::incomingConnection(int socketDescriptor)
 {
     int NouvellePartie[9] = {'&', 50, 150, 40,100,760,100,0,0};
+    memcpy(m_tinfos,NouvellePartie,sizeof(NouvellePartie));
 
-    memcpy(m_tinfos,NouvellePartie,9);
     while (CJoueurs <='1')
     {
         //  2 joueurs max

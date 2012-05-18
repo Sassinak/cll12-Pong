@@ -2,10 +2,6 @@
 #include "ui_pong.h"
 #include <QtGui>
 
-#define UNITE 10
-#define WIDTH 820
-#define HEIGHT 300
-
 pong::pong(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::pong)
@@ -13,7 +9,7 @@ pong::pong(QWidget *parent) :
     ui->setupUi(this);
     //int tInfos {1,2,3,4,5,6,7,8};
     int startInfos [9]={'%',WIDTH/2,HEIGHT/2,UNITE*3,HEIGHT/2,WIDTH-UNITE *40,HEIGHT/2,0,0};//pos depart : nouvelle balle
-    memcpy(m_tInfos,startInfos,9);
+    memcpy(m_tInfos,startInfos,sizeof(startInfos));
     bstart = false;
 
     //creation des objets
@@ -75,7 +71,7 @@ void pong::slRxInfos(int * p)
 void pong::gestionBalleetPointage(int* pinfos)
 {
     int tempinfos[9];
-    memcpy(tempinfos,pinfos,9);
+    memcpy(tempinfos,pinfos,sizeof(pinfos));
 
     Balle->moveBy(dx*10*0.005,dy*10*0.005);
 
@@ -109,7 +105,7 @@ void pong::gestionBalleetPointage(int* pinfos)
     tempinfos[5]= J2->x();
     tempinfos[6]= J2->y();
 
-    memcpy(m_tInfos,tempinfos,9);
+    memcpy(m_tInfos,tempinfos,sizeof(tempinfos));
 
     emit(siTxInfostoClients(m_tInfos,9));
 }

@@ -2,6 +2,9 @@
 #define THREADJOUEURS_H
 #include <QThread>
 #include <QTcpSocket>
+#define UNITE 10
+#define WIDTH 820
+#define HEIGHT 300
 
 class ThreadJoueurs : public QThread
 {
@@ -22,7 +25,7 @@ public slots:
 
 private:
     int m_socketDescriptor;
-    int* m_tinfos;
+    int m_tNouvellePartie [9];
     char cNoJ;
     QByteArray baRXInfos;     //trame de reception Infos - RX
     QByteArray baTXInfos;     //trame de transmission
