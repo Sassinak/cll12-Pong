@@ -21,6 +21,7 @@ public slots:
 public:
     ThreadJoueurs *thJoueurs;
     char CJoueurs;
+    int m_tinfos[9];
 };
 
 #endif // SERVEURTCP_H
