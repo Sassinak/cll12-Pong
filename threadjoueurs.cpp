@@ -50,6 +50,7 @@ void ThreadJoueurs::RXInfosFmJoueurs(QByteArray baRXInfos)
 
     for (int i=0;i<sltemp.size()-1;i++)
         ttemp[i]=sltemp.at(i).toInt();
+
     memcpy(m_rxInfos,ttemp,3);
 
     emit siInfosToServeur(m_rxInfos,3);
