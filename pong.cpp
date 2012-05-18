@@ -84,7 +84,7 @@ void pong::slRxInfos(QByteArray baRXInfos)
 void pong::gestionBalleetPointage(int* pinfos)
 {
     int tempinfos[9];
-    memcpy(tempinfos,pinfos,9);
+    memcpy(tempinfos,pinfos,sizeof(pinfos));
 
     Balle->moveBy(dx*10*0.005,dy*10*0.005);
 
@@ -138,6 +138,7 @@ QByteArray pong::TXInfosToJoueurs(int *pInfos,int n)
     }
     batxinfos.clear();
     batxinfos.append(stemp);
+    //
     return batxinfos;
 }
 

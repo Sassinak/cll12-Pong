@@ -20,23 +20,23 @@ public:
     explicit pong(QWidget *parent = 0);
     ~pong();
 
+    int m_tInfos[9];   // tableau qui contient toutes les donnees
+    QByteArray baTX;
+
     void gestionBalleetPointage(int* pinfos);
     void NouvelleBalle(int*);
-
-    int m_tInfos[9];       // pointe sur tableau int* qui contient toutes les donnees
-    QByteArray baTX;
+    QByteArray TXInfosToJoueurs(int *pInfos,int n);
 
 signals:
     void siTxInfostoClients(QByteArray,int);
     void siTimeout(int);                         //un probleme
 
 public slots:
-    //void slRxInfos(int* p);
     void slRxInfos(QByteArray baRXInfos);
     
 private slots:
     void on_btnStart_clicked();
-    QByteArray TXInfosToJoueurs(int *pInfos,int n);
+
 private:
     Ui::pong *ui;
     bool bstart;
