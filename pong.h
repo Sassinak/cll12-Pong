@@ -24,7 +24,6 @@ public:
     QByteArray baTX;
 
     void gestionBalleetPointage(int* pinfos);
-    void NouvelleBalle(int*);
     QByteArray TXInfosToJoueurs(int *pInfos,int n);
 
 signals:
@@ -36,14 +35,16 @@ public slots:
     
 private slots:
     void on_btnStart_clicked();
+    void slOn_timertimeout();
 
 private:
     Ui::pong *ui;
     bool bstart;
     int scoreA,scoreB, code;
+    QTimer *timer;
     ServeurTCP *serveur;
-    QGraphicsScene *Table;
-    QGraphicsRectItem *J1,*J2;
+    //QGraphicsScene *Table;    //si implementation fenetre observation
+    QGraphicsRectItem *J1,*J2;  // pour gestion des objets graphiques (surtout: collisions)
     QGraphicsEllipseItem * Balle;
     int dx, dy;
     int murGauche;

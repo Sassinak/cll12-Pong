@@ -1,6 +1,7 @@
 #include "pong.h"
 #include "ui_pong.h"
 #include <QtGui>
+#include <QTimer>
 
 #define UNITE 10
 #define WIDTH 820
@@ -15,6 +16,8 @@ pong::pong(QWidget *parent) :
     int startInfos [9]={'%',WIDTH/2,HEIGHT/2,UNITE*3,HEIGHT/2,WIDTH-UNITE *40,HEIGHT/2,0,0};//pos depart : nouvelle balle
     memcpy(m_tInfos,startInfos,9);
     bstart = false;
+    timer = new QTimer(this);       // pour avoir un signal (keep alive?) au moins au seconde
+    connect(timer,SIGNAL(timeout()),this,SLOT(slOn_timertimeout()));
 
     //creation des objets
     this->J1 = new QGraphicsRectItem (0,0,UNITE,UNITE *4);
@@ -50,6 +53,7 @@ void pong::on_btnStart_clicked()
             ui->btnStart->setText("Arret");
         }
      if(bstart){
+            serveur->disconnect();
             serveur->close();
             ui->btnStart->setText("Demarrer");
         }
@@ -81,6 +85,11 @@ void pong::slRxInfos(QByteArray baRXInfos)
     gestionBalleetPointage(m_tInfos);
 }
 
+void pong::slOn_timertimeout()
+{
+    gestionBalleetPointage(m_tInfos);
+}
+
 void pong::gestionBalleetPointage(int* pinfos)
 {
     int tempinfos[9];
@@ -91,21 +100,21 @@ void pong::gestionBalleetPointage(int* pinfos)
     //collisions
     // limites terrain
     if(Balle->y()>HEIGHT-10 || Balle->y()<= 0)
-        dy = -dy;
+        dy = -dy;           //rebond
     //avec palettes joueurs
     if(Balle->collidesWithItem(J1)|| Balle->collidesWithItem(J2))
-        dx =-dx;
+        dx =-dx;            //rebond
 
     //if balle score( depasse xmaxA ou xmaxB)
     if(Balle->x() < murGauche)
     {
-        tempinfos[8] =+1;      //score B joueur 2
+        tempinfos[9] =+1;      //score B joueur 2
         if(tempinfos[8] == 15)
             tempinfos[0]= int('$'); //code Winner!
     }
     if(Balle->x() > murDroite)
     {
-        tempinfos[9] =+1;      //score A joueur 1
+        tempinfos[8] =+1;      //score A joueur 1
         if(tempinfos[9] == 15)
              tempinfos[0]= int('$');
     }
@@ -121,9 +130,9 @@ void pong::gestionBalleetPointage(int* pinfos)
     memcpy(m_tInfos,tempinfos,sizeof(tempinfos));
 
     //conversion immediate en qbytearray pour tx
-    baTX = TXInfosToJoueurs(m_tInfos,sizeof(m_tInfos));
+    baTX = TXInfosToJoueurs(m_tInfos,9);
 
-    emit(siTxInfostoClients(baTX,9));
+    emit(siTxInfostoClients(baTX));
 }
 QByteArray pong::TXInfosToJoueurs(int *pInfos,int n)
 {
@@ -138,7 +147,8 @@ QByteArray pong::TXInfosToJoueurs(int *pInfos,int n)
     }
     batxinfos.clear();
     batxinfos.append(stemp);
-    //
+
+    timer->start(1000);
     return batxinfos;
 }
 
