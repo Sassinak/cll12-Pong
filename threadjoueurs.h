@@ -10,6 +10,7 @@ public:
     explicit ThreadJoueurs(int socketDescriptor, char noJ);
     void run();
     int m_txInfos[9];  //tableau sortant
+
     void RXInfosFmJoueurs(QByteArray baRXInfos);
     QByteArray TXInfosToJoueurs(int *pTXInfos,int n);
 
@@ -21,12 +22,13 @@ public slots:
 
 private:
     int m_socketDescriptor;
-    int* m_tinfos;
+    int* m_tinfos;          //pointeur de tableau
+    int m_InfosStart[9];   //tableau de depart
     char cNoJ;
     QByteArray baRXInfos;     //trame de reception Infos - RX
     QByteArray baTXInfos;     //trame de transmission
-    QString sTX;
-    QByteArray banojoueur;
+    //QString sTX;
+    //QByteArray baNojoueur;
 
 };
 

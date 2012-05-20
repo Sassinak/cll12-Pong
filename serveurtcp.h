@@ -8,7 +8,7 @@ class ServeurTCP : public QTcpServer
     Q_OBJECT
 public:
     explicit ServeurTCP();//QObject *parent = 0);
-    
+    ~ServeurTCP();
 signals:
     void siTXInfostoArbitre(QByteArray);
     void siTXInfostothJoueurs(QByteArray);

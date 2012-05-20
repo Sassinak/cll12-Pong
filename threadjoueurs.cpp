@@ -9,32 +9,39 @@ ThreadJoueurs::ThreadJoueurs(int socketDescriptor,char noJ)
 
     cNoJ = noJ;
 
-    memcpy(m_txInfos,NouvellePartie,9);
+    memcpy(m_InfosStart,NouvellePartie,sizeof(NouvellePartie));
 }
 
 void ThreadJoueurs::run()
 {
     QTcpSocket unSocket;
-    int NouvellePartie[9] = {'&', 50, 150, 40,100,760,100,0,0};
 
     unSocket.setSocketDescriptor(m_socketDescriptor);
-    if(unSocket.waitForConnected(1000))
+    if(unSocket.waitForConnected(100))
     {
-        while(unSocket.ConnectedState)         //.waitForReadyRead(1000))
+        while(unSocket.waitForReadyRead(3000))
         {
+
             baRXInfos=unSocket.read(unSocket.bytesAvailable());
+            //baRXInfos = unSocket.readAll();
             if(baRXInfos.left(1) == "&")
             {
                 unSocket.write(baTXInfos.append(cNoJ));
-                baTXInfos = TXInfosToJoueurs(NouvellePartie,sizeof(NouvellePartie));
+                unSocket.waitForBytesWritten(100);
+                //attendre entre les deux trames
+                baTXInfos = TXInfosToJoueurs(m_InfosStart,9);
+                unSocket.write(baTXInfos);
             }
-            else
+            if(baRXInfos.left(1) == "#")
             {
                 RXInfosFmJoueurs(baRXInfos);
                 baTXInfos = TXInfosToJoueurs(m_txInfos,9);
-            }
-            unSocket.write(baTXInfos);
-            unSocket.waitForBytesWritten(10);
+                unSocket.write(baTXInfos);
+            }            
+            unSocket.waitForBytesWritten(100);
+            baTXInfos.clear();
+            baRXInfos.clear();
+            //ThreadJoueurs::sleep(50);
         }
     }
     unSocket.disconnectFromHost();

@@ -28,7 +28,7 @@ public:
     QByteArray TXInfosToJoueurs(int *pInfos,int n);
 
 signals:
-    void siTxInfostoClients(QByteArray,int);
+    void siTxInfostoClients(QByteArray);
     void siTimeout(int);                         //un probleme
 
 public slots:
