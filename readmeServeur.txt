@@ -28,21 +28,21 @@ pong:
        - depasse murs du fond/score
             - gere les points
             - declare le gagnant
-    - TX bainfos: int pInfos[9]--> QbyteArray via SIGNAL
+  x - TX bainfos: int pInfos[9]--> QbyteArray via SIGNAL
 
 serveurtcp:
  X  - attend 2 connections
  x  - part les threadsjoueurs
-        - en assignant noJoueur
+ x      - en assignant noJoueur
     - SIGNAUX / SLOTS:
-         -tx/rx QByteArray baInfos <-> arbitre(gui) <->thjoueurs
+ x      -tx/rx QByteArray baInfos <-> arbitre(gui) <->thjoueurs
 
 threadjoueurs:
-    - communique entre le serveur et les clients/joueurs par tcp/ip
-    - tx/rx qbytearray
-            - tx noJoueur
-            - avec le serveur <--> GUI pour collisions SIGNAL/SLOT
-            - avec les joueurs <--> qbA infos(<-tcp-> clients)
+ x    - communique entre le serveur et les clients/joueurs par tcp/ip
+ x   - tx/rx qbytearray
+ x           - tx noJoueur
+ x           - avec le serveur <--> GUI pour collisions SIGNAL/SLOT
+ x           - avec les joueurs <--> qbA infos(<-tcp-> clients)
 
 
 refs sur net: http://code.google.com/p/movement-game/source/browse/trunk/test/gametest/pong.cpp?r=52

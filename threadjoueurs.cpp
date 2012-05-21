@@ -6,7 +6,7 @@ ThreadJoueurs::ThreadJoueurs(int socketDescriptor,char noJ)
 {
     m_socketDescriptor = socketDescriptor;
     int NouvellePartie[9] = {'&', 50, 150, 40,100,760,100,0,0};
-
+    bRun = true;
     cNoJ = noJ;
 
     memcpy(m_InfosStart,NouvellePartie,sizeof(NouvellePartie));
@@ -17,31 +17,33 @@ void ThreadJoueurs::run()
     QTcpSocket unSocket;
 
     unSocket.setSocketDescriptor(m_socketDescriptor);
-    if(unSocket.waitForConnected(100))
+    if(unSocket.waitForConnected(5000))
     {
-        while(unSocket.waitForReadyRead(5000))
+        while(bRun)
         {
-
-            baRXInfos=unSocket.read(unSocket.bytesAvailable());
-            //baRXInfos = unSocket.readAll();
-            if(baRXInfos.left(1) == "&")        //trame demarrer
+            while(unSocket.waitForReadyRead(500))
             {
-                unSocket.write(baTXInfos.append(cNoJ));
+                baRXInfos=unSocket.read(unSocket.bytesAvailable());
+                //baRXInfos = unSocket.readAll();
+                if(baRXInfos.left(1) == "&")        //trame demarrer
+                {
+                    unSocket.write(baTXInfos.append(cNoJ));
+                    unSocket.waitForBytesWritten(100);
+                    //attendre entre les deux trames
+                    baTXInfos = TXInfosToJoueurs(m_InfosStart,9);
+                    unSocket.write(baTXInfos);
+                }
+                if(baRXInfos.left(1) == "#")    //trame "normale"
+                {
+                    RXInfosFmJoueurs(baRXInfos);
+                    baTXInfos = TXInfosToJoueurs(m_txInfos,9);
+                    unSocket.write(baTXInfos);
+                }
                 unSocket.waitForBytesWritten(100);
-                //attendre entre les deux trames
-                baTXInfos = TXInfosToJoueurs(m_InfosStart,9);
-                unSocket.write(baTXInfos);
+                baTXInfos.clear();
+                baRXInfos.clear();
+                //ThreadJoueurs::sleep(50);
             }
-            if(baRXInfos.left(1) == "#")    //trame "normale"
-            {
-                RXInfosFmJoueurs(baRXInfos);
-                baTXInfos = TXInfosToJoueurs(m_txInfos,9);
-                unSocket.write(baTXInfos);
-            }            
-            unSocket.waitForBytesWritten(100);
-            baTXInfos.clear();
-            baRXInfos.clear();
-            //ThreadJoueurs::sleep(50);
         }
     }
     unSocket.disconnectFromHost();

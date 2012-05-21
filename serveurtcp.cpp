@@ -28,6 +28,7 @@ void ServeurTCP::slRXInfosfmArbitre(QByteArray batx)
 }
 ServeurTCP::~ServeurTCP()
 {
+    thJoueurs->bRun = false;
     thJoueurs->quit();
 }
 

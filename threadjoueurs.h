@@ -9,6 +9,7 @@ class ThreadJoueurs : public QThread
 public:
     explicit ThreadJoueurs(int socketDescriptor, char noJ);
     void run();
+    bool bRun;
     int m_txInfos[9];  //tableau sortant
 
     void RXInfosFmJoueurs(QByteArray baRXInfos);
