@@ -139,7 +139,7 @@ QByteArray pong::TXInfosToJoueurs(int *pInfos,int n)
     //encode pour tx
     QByteArray batxinfos;
     QString stemp="";
-    stemp.append((QString::number(pInfos[0])));
+    stemp.append(pInfos[0]);   //::number(pInfos[0])));
     for (int i=1;i<n;i++)
     {
         stemp.append('.');

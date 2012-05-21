@@ -19,12 +19,12 @@ void ThreadJoueurs::run()
     unSocket.setSocketDescriptor(m_socketDescriptor);
     if(unSocket.waitForConnected(100))
     {
-        while(unSocket.waitForReadyRead(3000))
+        while(unSocket.waitForReadyRead(5000))
         {
 
             baRXInfos=unSocket.read(unSocket.bytesAvailable());
             //baRXInfos = unSocket.readAll();
-            if(baRXInfos.left(1) == "&")
+            if(baRXInfos.left(1) == "&")        //trame demarrer
             {
                 unSocket.write(baTXInfos.append(cNoJ));
                 unSocket.waitForBytesWritten(100);
@@ -32,7 +32,7 @@ void ThreadJoueurs::run()
                 baTXInfos = TXInfosToJoueurs(m_InfosStart,9);
                 unSocket.write(baTXInfos);
             }
-            if(baRXInfos.left(1) == "#")
+            if(baRXInfos.left(1) == "#")    //trame "normale"
             {
                 RXInfosFmJoueurs(baRXInfos);
                 baTXInfos = TXInfosToJoueurs(m_txInfos,9);
@@ -57,7 +57,7 @@ QByteArray ThreadJoueurs::TXInfosToJoueurs(int *pInfos,int n)
     //encode pour tx
     QByteArray batxinfos;
     QString stemp="";
-    stemp.append((QString::number(pInfos[0])));
+    stemp.append(pInfos[0]);
     for (int i=1;i<n;i++)
     {
         stemp.append('.');
